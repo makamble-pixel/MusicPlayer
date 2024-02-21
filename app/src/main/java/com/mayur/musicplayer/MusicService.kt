@@ -156,7 +156,7 @@ class MusicService: Service(), AudioManager.OnAudioFocusChangeListener {
             mediaPlayer!!.pause()
             showNotification(R.drawable.play_icon)
 
-        }
+        }/*
        else{
            //play music
             PlayerActivity.binding.playPauseBtnPA.setIconResource(R.drawable.pause_icon)
@@ -164,7 +164,7 @@ class MusicService: Service(), AudioManager.OnAudioFocusChangeListener {
             PlayerActivity.isPlaying = true
             mediaPlayer!!.start()
             showNotification(R.drawable.pause_icon)
-        }
+        }*/
     }
 
     //for making persistent

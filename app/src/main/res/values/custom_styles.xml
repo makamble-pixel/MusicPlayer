@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="curved">
-        <item name="cornerSize">15%</item>
+        <item name="cornerSize">7%</item>
+    </style>
+    <style name="radius">
+        <item name="cornerSize">12dp</item>
     </style>
 </resources>

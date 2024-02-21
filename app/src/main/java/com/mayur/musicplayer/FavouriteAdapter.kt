@@ -85,7 +85,51 @@ class FavouriteAdapter(private val context: Context, private var musicList: Arra
                 else -> sendIntent(ref = "FavouriteAdapter", pos = position)
             }
         }
-    }
+    }/*
+    override fun onBindViewHolder(holder: MyHolder, position: Int) {
+        holder.name.text = musicList[position].title
+        Glide.with(context)
+            .load(musicList[position].artUri)
+            .apply(RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen).centerCrop())
+            .into(holder.image)
+
+        // Common click listener for all cases
+        holder.root.setOnClickListener {
+            val intent = Intent(context, PlayerActivity::class.java)
+            intent.putExtra("index", position)
+            intent.putExtra("class", if (playNext) "PlayNext" else "FavouriteAdapter")
+            ContextCompat.startActivity(context, intent, null)
+        }
+
+        // Long click listener only for playNext case
+        if (playNext) {
+            holder.root.setOnLongClickListener {
+                val customDialog = LayoutInflater.from(context).inflate(R.layout.more_features, holder.root, false)
+                val bindingMF = MoreFeaturesBinding.bind(customDialog)
+                val dialog = MaterialAlertDialogBuilder(context).setView(customDialog)
+                    .create()
+                dialog.show()
+                dialog.window?.setBackgroundDrawable(ColorDrawable(0x99000000.toInt()))
+                bindingMF.AddToPNBtn.text = "Remove"
+                bindingMF.AddToPNBtn.setOnClickListener {
+                    if (position == PlayerActivity.songPosition)
+                        Snackbar.make(
+                            (context as Activity).findViewById(R.id.linearLayoutPN),
+                            "Can't Remove Currently Playing Song.",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    else {
+                        if (PlayerActivity.songPosition < position && PlayerActivity.songPosition != 0) --PlayerActivity.songPosition
+                        PlayNext.playNextList.removeAt(position)
+                        PlayerActivity.musicListPA.removeAt(position)
+                        notifyItemRemoved(position)
+                    }
+                    dialog.dismiss()
+                }
+                true
+            }
+        }
+    }*/
 
     override fun getItemCount(): Int {
         return musicList.size

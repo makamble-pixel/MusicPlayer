@@ -8,7 +8,6 @@
     tools:openDrawer="start"
     tools:context=".MainActivity">
 
-
     <!--    for refreshing layout on swipe from top-->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refreshLayout"
@@ -31,29 +30,88 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <!--shuffle Button-->
-                    <Button
-                        android:id="@+id/shuffleBtn"
-                        style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/shuffleCard"
+                        android:layout_width="18dp"
+                        android:layout_height="70dp"
                         android:layout_weight="1"
-                        android:contentDescription="@string/shuffle_btn"
-                        android:drawableTop="@drawable/shuffle_icon"
-                        android:text="@string/shuffle_btn"
-                        android:textAllCaps="false"
-                        android:textColor="?colorOnPrimary" />
+                        app:cardCornerRadius="12dp"
+                        android:layout_margin="10dp">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="?attr/themeColor">
+
+                        <Button
+                            android:id="@+id/shuffleBtn"
+                            style="@style/Widget.AppCompat.Button.Borderless"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:drawableTop="@drawable/shuffle_icon"
+                            android:text="@string/shuffle_btn"
+                            android:contentDescription="@string/shuffle_btn"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white"
+                            android:layout_gravity="center"/>
+                        </FrameLayout>
+                    </androidx.cardview.widget.CardView>
                     <!--Favourites Button-->
-                    <Button
-                        android:id="@+id/favouriteBtn"
-                        style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                    <!-- Favourites Button CardView -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/favouriteCard"
+                        android:layout_width="22dp"
+                        android:layout_height="70dp"
                         android:layout_weight="1"
-                        android:contentDescription="@string/favourites_btn"
-                        android:drawableTop="@drawable/favourite_icon"
-                        android:text="@string/favourites_btn"
-                        android:textAllCaps="false"
-                        android:textColor="?colorOnPrimary" />
+                        app:cardCornerRadius="12dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="?attr/themeColor">
+                        <Button
+                            android:id="@+id/favouriteBtn"
+                            style="@style/Widget.AppCompat.Button.Borderless"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:drawableTop="@drawable/favourite_icon"
+                            android:text="@string/favourites_btn"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white"
+                            android:layout_gravity="center"/>
+                        </FrameLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Play Next Button CardView -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/playNextCard"
+                        android:layout_width="20dp"
+                        android:layout_height="70dp"
+                        android:layout_weight="1"
+                        app:cardCornerRadius="12dp"
+                        android:layout_margin="10dp">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="?attr/themeColor">
+                        <Button
+                            android:id="@+id/playNextBtn"
+                            style="@style/Widget.AppCompat.Button.Borderless"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:drawableTop="@drawable/play_next_icon"
+                            android:layout_weight="1"
+                            android:text="@string/play_next"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white"
+                            android:layout_gravity="center"/>
+                        </FrameLayout>
+                    </androidx.cardview.widget.CardView>
                     <!--Playlists Button
                     <Button
                         android:id="@+id/playlistBtn"
@@ -67,7 +125,7 @@
                         android:textAllCaps="false"
                         android:textColor="?colorOnPrimary" /> -->
 
-                    <!--Play Next Button-->
+                    <!--Play Next Button
                     <Button
                         android:id="@+id/playNextBtn"
                         style="@style/Widget.AppCompat.Button.Borderless"
@@ -78,16 +136,17 @@
                         android:drawableTop="@drawable/play_next_icon"
                         android:text="@string/play_next"
                         android:textAllCaps="false"
-                        android:textColor="?colorOnPrimary" />
-
+                        android:textColor="?colorOnPrimary" />-->
                 </LinearLayout>
-
-                <!--Total Songs Button-->
+                    <!--Total Songs Button-->
                 <TextView
                     android:id="@+id/totalSongs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="10dp"
                     android:text="@string/total_songs"
                     android:textColor="?colorOnPrimary" />
 

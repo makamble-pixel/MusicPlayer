@@ -5,7 +5,9 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.database.Cursor
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -16,12 +18,15 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
+import android.util.TypedValue
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
+import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -47,7 +52,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         var fIndex: Int = -1
         lateinit var loudnessEnhancer: LoudnessEnhancer
     }
-
 
 
     @SuppressLint("SetTextI18n")
@@ -107,15 +111,31 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 }
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+            /*{
+                // Increase thumb size when touch starts
+                increaseThumbBoldness(binding.seekBarPA)
+            }*/
             override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
+            /*{
+                // Restore thumb size when touch ends
+                restoreThumbBoldness(binding.seekBarPA)
+            }*/
         })
         binding.repeatBtnPA.setOnClickListener {
             if(!repeat){
                 repeat = true
-                binding.repeatBtnPA.setColorFilter(ContextCompat.getColor(this, R.color.purple_500))
+                val typedValue = TypedValue()
+                // Resolve the theme attribute to obtain the color resource ID
+                theme.resolveAttribute(R.attr.themeColor, typedValue, true)
+                // Get the color resource ID
+                val colorResId = typedValue.resourceId
+                // Use ContextCompat.getColor with the resolved color resource ID
+                val color = ContextCompat.getColor(this, colorResId)
+                // Set the color filter
+                binding.repeatBtnPA.setColorFilter(color)
             }else{
                 repeat = false
-                binding.repeatBtnPA.setColorFilter(ContextCompat.getColor(this, R.color.cool_pink))
+                binding.repeatBtnPA.setColorFilter(ContextCompat.getColor(this, R.color.black))
             }
         }
         binding.equalizerBtnPA.setOnClickListener {
@@ -129,19 +149,39 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
         binding.timerBtnPA.setOnClickListener {
             val timer = min15 || min30 || min60
-            if(!timer) showBottomSheetDialog()
+            if(!timer){
+                val typedValue = TypedValue()
+                // Resolve the theme attribute to obtain the color resource ID
+                theme.resolveAttribute(R.attr.themeColor, typedValue, true)
+                // Get the color resource ID
+                val colorResId = typedValue.resourceId
+                // Use ContextCompat.getColor with the resolved color resource ID
+                val color = ContextCompat.getColor(this, colorResId)
+                // Set the color filter
+                binding.timerBtnPA.setColorFilter(color)
+                showBottomSheetDialog()
+            }
             else {
                 val builder = MaterialAlertDialogBuilder(this)
                 builder.setTitle("Stop Timer")
                     .setMessage("Do you want to stop timer?")
-                    .setPositiveButton("Yes"){ _, _ ->
+                    .setPositiveButton("Yes") { _, _ ->
                         min15 = false
                         min30 = false
                         min60 = false
-                        binding.timerBtnPA.setColorFilter(ContextCompat.getColor(this, R.color.cool_pink))
+                        binding.timerBtnPA.setColorFilter(ContextCompat.getColor(this, R.color.black))
                     }
                     .setNegativeButton("No"){dialog, _ ->
                         dialog.dismiss()
+                        val typedValue = TypedValue()
+                        // Resolve the theme attribute to obtain the color resource ID
+                        theme.resolveAttribute(R.attr.themeColor, typedValue, true)
+                        // Get the color resource ID
+                        val colorResId = typedValue.resourceId
+                        // Use ContextCompat.getColor with the resolved color resource ID
+                        val color = ContextCompat.getColor(this, colorResId)
+                        // Set the color filter
+                        binding.timerBtnPA.setColorFilter(color)
                     }
                 val customDialog = builder.create()
                 customDialog.show()
@@ -168,8 +208,29 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 FavouriteActivity.favouriteSongs.add(musicListPA[songPosition])
             }
             FavouriteActivity.favouritesChanged = true
+            isFavourite = !isFavourite // Toggle the state
+
+            val iconColor = if (isFavourite) {
+                ContextCompat.getColor(this, android.R.color.black)
+            } else {
+                ContextCompat.getColor(this, android.R.color.holo_red_dark)
+            }
+            binding.favouriteBtnPA.setColorFilter(iconColor)
         }
     }
+    /*private fun increaseThumbBoldness(seekBar: SeekBar?) {
+        val thumb = seekBar?.thumb
+        thumb?.alpha = 0.7f // Make thumb slightly transparent when touched
+        thumb?.setBounds(0, 0, thumb.intrinsicWidth + 20, thumb.intrinsicHeight + 20)
+        seekBar?.thumb = thumb
+    }
+
+    private fun restoreThumbBoldness(seekBar: SeekBar?) {
+        val thumb = seekBar?.thumb
+        thumb?.alpha = 1f // Fully opaque thumb when not touched
+        thumb?.setBounds(0, 0, thumb.intrinsicWidth, thumb.intrinsicHeight)
+        seekBar?.thumb = thumb
+    }*/
     //Important Function
     private fun initializeLayout(){
         songPosition = intent.getIntExtra("index", 0)
@@ -204,13 +265,13 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             .apply(RequestOptions().placeholder(R.drawable.music_player_icon_slash_screen).centerCrop())
             .into(binding.songImgPA)
         binding.songNamePA.text = musicListPA[songPosition].title
+        binding.songNamePA.isSelected = true
         if(repeat) binding.repeatBtnPA.setColorFilter(ContextCompat.getColor(applicationContext, R.color.purple_500))
         if(min15 || min30 || min60) binding.timerBtnPA.setColorFilter(ContextCompat.getColor(applicationContext, R.color.purple_500))
         if(isFavourite) binding.favouriteBtnPA.setImageResource(R.drawable.favourite_icon)
         else binding.favouriteBtnPA.setImageResource(R.drawable.favourite_empty_icon)
-
         val img = getImgArt(musicListPA[songPosition].path)
-        val image = if (img != null) {
+        val image = if (img != null && img.isNotEmpty()) {
             BitmapFactory.decodeByteArray(img, 0, img.size)
         } else {
             BitmapFactory.decodeResource(
@@ -218,10 +279,15 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 R.drawable.music_player_icon_slash_screen
             )
         }
-        val bgColor = getMainColor(image)
+        val dominantColor = getDominantColorFromImage(image)
+        //setBackgroundFromImage(image)
+        setGradientBackground(dominantColor)
+        //NowPlaying.backgroundColor = dominantColor
+        //window.decorView.background = drawable
+        /*val bgColor = getMainColor(image)
         val gradient = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(0xFFFFFF, bgColor))
-        binding.root.background = gradient
-        window?.statusBarColor = bgColor
+        binding.root.background = gradient*/
+        //window?.statusBarColor = dominantColor
     }
 
     private fun createMediaPlayer(){
@@ -317,7 +383,15 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         dialog.show()
         dialog.findViewById<LinearLayout>(R.id.min_15)?.setOnClickListener {
             Toast.makeText(baseContext,  "Music will stop after 15 minutes", Toast.LENGTH_SHORT).show()
-            binding.timerBtnPA.setColorFilter(ContextCompat.getColor(this, R.color.purple_500))
+            val typedValue = TypedValue()
+            // Resolve the theme attribute to obtain the color resource ID
+            theme.resolveAttribute(R.attr.themeColor, typedValue, true)
+            // Get the color resource ID
+            val colorResId = typedValue.resourceId
+            // Use ContextCompat.getColor with the resolved color resource ID
+            val color = ContextCompat.getColor(this, colorResId)
+            // Set the color filter
+            binding.timerBtnPA.setColorFilter(color)
             min15 = true
             Thread{Thread.sleep((15 * 60000).toLong())
                 if(min15) exitApplication()}.start()
@@ -325,7 +399,15 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
         dialog.findViewById<LinearLayout>(R.id.min_30)?.setOnClickListener {
             Toast.makeText(baseContext,  "Music will stop after 30 minutes", Toast.LENGTH_SHORT).show()
-            binding.timerBtnPA.setColorFilter(ContextCompat.getColor(this, R.color.purple_500))
+            val typedValue = TypedValue()
+            // Resolve the theme attribute to obtain the color resource ID
+            theme.resolveAttribute(R.attr.themeColor, typedValue, true)
+            // Get the color resource ID
+            val colorResId = typedValue.resourceId
+            // Use ContextCompat.getColor with the resolved color resource ID
+            val color = ContextCompat.getColor(this, colorResId)
+            // Set the color filter
+            binding.timerBtnPA.setColorFilter(color)
             min30 = true
             Thread{Thread.sleep((30 * 60000).toLong())
                 if(min30) exitApplication()}.start()
@@ -333,7 +415,15 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
         dialog.findViewById<LinearLayout>(R.id.min_60)?.setOnClickListener {
             Toast.makeText(baseContext,  "Music will stop after 60 minutes", Toast.LENGTH_SHORT).show()
-            binding.timerBtnPA.setColorFilter(ContextCompat.getColor(this, R.color.purple_500))
+            val typedValue = TypedValue()
+            // Resolve the theme attribute to obtain the color resource ID
+            theme.resolveAttribute(R.attr.themeColor, typedValue, true)
+            // Get the color resource ID
+            val colorResId = typedValue.resourceId
+            // Use ContextCompat.getColor with the resolved color resource ID
+            val color = ContextCompat.getColor(this, colorResId)
+            // Set the color filter
+            binding.timerBtnPA.setColorFilter(color)
             min60 = true
             Thread{Thread.sleep((60 * 60000).toLong())
                 if(min60) exitApplication()}.start()
@@ -371,5 +461,58 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         if(shuffle) musicListPA.shuffle()
         setLayout()
         if(!playNext) PlayNext.playNextList = ArrayList()
+    }
+    // Function to get dominant color from an image
+    private fun getDominantColorFromImage(imageBitmap: Bitmap): Int {
+        val palette = Palette.from(imageBitmap).generate()
+
+// Filter out swatches with low luminance (black, grey, white, and their shades)
+        val filteredSwatches = palette.swatches.filter { swatch ->
+            val luminance = ColorUtils.calculateLuminance(swatch.rgb)
+            luminance > 0.1 && luminance < 0.9 // Adjust the luminance threshold based on your preference
+        }
+
+// Find the dominant color among the filtered swatches
+        val dominantSwatch = filteredSwatches.maxByOrNull { it.population }
+
+        if (dominantSwatch != null) {
+            return dominantSwatch.rgb
+        } else {
+            // If no dominant color is found, fetch the dark color from getBrightestColorFromImage
+            return getBrightestColorFromImage(imageBitmap)
+        }
+    }
+    private fun setGradientBackground(dominantColor: Int) {
+        val gradient = GradientDrawable(
+            GradientDrawable.Orientation.BOTTOM_TOP,intArrayOf(Color.WHITE,dominantColor) // Change Color.WHITE to your default color
+        )
+        //val color = ColorDrawable()
+        // Set the gradient as the background for the root layout or the entire screen
+        window.decorView.background = gradient
+        window?.statusBarColor = dominantColor
+        window?.setBackgroundDrawable(gradient)
+    }
+    /*
+    private fun setBackgroundFromImage(imageBitmap: Bitmap) {
+        val palette = Palette.from(imageBitmap).generate()
+        val dominantColor = palette.dominantSwatch?.rgb ?: Color.WHITE // Default color if no dominant color found
+        val glassColor = Color.argb(150, Color.red(dominantColor), Color.green(dominantColor), Color.blue(dominantColor))
+    }*/
+
+    private fun getBrightestColorFromImage(imageBitmap: Bitmap): Int {
+        val palette = Palette.from(imageBitmap).generate()
+        val darkSwatch = palette.swatches
+            .filter { swatch ->
+                // Exclude black or its shades
+                val luminance = ColorUtils.calculateLuminance(swatch.rgb)
+                luminance >= 0.2
+            }
+            .minByOrNull { swatch ->
+                // Calculate darkness based on RGB values
+                val rgb = swatch.rgb
+                val darkness = (Color.red(rgb) * 299 + Color.green(rgb) * 587 + Color.blue(rgb) * 114) / 1000
+                darkness
+            }
+        return darkSwatch?.rgb ?: getDominantColorFromImage(imageBitmap) // Return black if no suitable color is found
     }
 }

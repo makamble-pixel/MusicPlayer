@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     companion object{
         lateinit var MusicListMA : ArrayList<Music>
         lateinit var musicListSearch : ArrayList<Music>
+        //private lateinit var tabLayout: TabLayout
         var search: Boolean = false
         var themeIndex: Int = 0
         val currentTheme = arrayOf(R.style.coolPink, R.style.coolBlue, R.style.coolPurple, R.style.coolGreen)
@@ -69,22 +70,56 @@ class MainActivity : AppCompatActivity() {
                 FavouriteActivity.favouriteSongs.addAll(data)
             }
         }
+        /*
+        // Initialize TabLayout and add tabs
+        tabLayout = findViewById(R.id.tabLayout)
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                // Handle tab selection
+                when (tab.position) {
+                    0 -> {
+                        // Shuffle tab selected
+                        val intent = Intent(this@MainActivity, PlayerActivity::class.java)
+                        intent.putExtra("index", 0)
+                        intent.putExtra("class", "MainActivity")
+                        startActivity(intent)
+                    }
 
-        binding.shuffleBtn.setOnClickListener {
-            val intent = Intent(this@MainActivity, PlayerActivity::class.java)
-            intent.putExtra("index", 0)
-            intent.putExtra("class", "MainActivity")
-            startActivity(intent)
-        }
-        binding.favouriteBtn.setOnClickListener {
-            startActivity(Intent(this@MainActivity, FavouriteActivity::class.java))
-        }
-        /*binding.playlistBtn.setOnClickListener {
-            startActivity(Intent(this@MainActivity, PlaylistActivity::class.java))
-        }*/
-        binding.playNextBtn.setOnClickListener {
-            startActivity(Intent(this@MainActivity, PlayNext::class.java))
-        }
+                    1 -> {
+                        // Favourites tab selected
+                        startActivity(Intent(this@MainActivity, FavouriteActivity::class.java))
+                    }
+
+                    2 -> {
+                        // Play Next tab selected
+                        startActivity(Intent(this@MainActivity, PlayNext::class.java))
+                    }
+                }
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+                // Handle tab unselection
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab) {
+                // Handle tab reselection
+            }
+        })*/
+
+    binding.shuffleBtn.setOnClickListener {
+        val intent = Intent(this@MainActivity, PlayerActivity::class.java)
+        intent.putExtra("index", 0)
+        intent.putExtra("class", "MainActivity")
+        startActivity(intent)
+    }
+    binding.favouriteBtn.setOnClickListener {
+        startActivity(Intent(this@MainActivity, FavouriteActivity::class.java))
+    }
+    /*binding.playlistBtn.setOnClickListener {
+        startActivity(Intent(this@MainActivity, PlaylistActivity::class.java))
+    }*/
+    binding.playNextBtn.setOnClickListener {
+        startActivity(Intent(this@MainActivity, PlayNext::class.java))
+    }
         binding.navView.setNavigationItemSelectedListener{
             when(it.itemId)
             {

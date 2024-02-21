@@ -5,6 +5,7 @@
     <string name="playlist_btn">Playlists</string>
     <string name="total_songs">All Songs</string>
     <string name="world_of_music">Music Player</string>
+    <string name="now_playing">Now Playing</string>
     <string name="song_name">Song Name</string>
     <string name="next_button_description">Next</string>
     <string name="play_pause_description">Play/Pause</string>

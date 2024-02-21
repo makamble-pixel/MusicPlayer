@@ -17,6 +17,7 @@ class NowPlaying : Fragment() {
     companion object{
         @SuppressLint("StaticFieldLeak")
         lateinit var binding: FragmentNowPlayingBinding
+        //var backgroundColor: Int = Color.TRANSPARENT
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -59,6 +60,8 @@ class NowPlaying : Fragment() {
             binding.songNameNP.text = PlayerActivity.musicListPA[PlayerActivity.songPosition].title
             if(PlayerActivity.isPlaying) binding.playPauseBtnNP.setIconResource(R.drawable.pause_icon)
             else binding.playPauseBtnNP.setIconResource(R.drawable.play_icon)
+            // Set background color
+            //binding.cardView.setBackgroundColor(backgroundColor)
         }
     }
 
